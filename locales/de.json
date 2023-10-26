@@ -1,0 +1,21 @@
+{
+    "deviceSetupWarning": "Das Gerät ist noch nicht konfiguriert! Gehe bitte in die erweiterten Einstellungen um die Einrichtung abzuschließen.",
+    "deviceFwOutdatedWarning": "Für dieses Gerät ist eine neuere Firmware Version verfügbar! Bitte aktualisieren.",
+    "allLEDsLabel": "ALLE",
+    "deviceLooksOffline": "Das Gerät ist nicht erreichbar!",
+    "settings": {
+        "title": "Einstellungen",
+        "labelDeviceName": "Gerätename",
+        "labelDeviceId": "Geräte ID",
+        "labelBtnConfig": "Konfigurieren",
+        "labelLedNumber": "#",
+        "labelLedName": "LED Name",
+        "labelBtnSaveLeds": "Speichern",
+        "ledSettingsInfo": "Diese Einstellungen ermöglichen es den individuellen LEDs Namen zu geben (nicht unterstützt für WLED). Dies dient nur zur besseren Orientierung in deinen Flows. Zudem beachte, dass die Namen in deinen Flowcards nicht automatisch aktualisiert werden wenn du LED Namen änderst. Das ist eine technische Einschränkung, durch die Art und Weise wie Flowcard Argumente implementiert sind."
+    },
+    "wled": {
+        "unsupFw": "Nicht unterstütze Firmware! Bitte Controller aktualisieren!",
+        "allSeg": "Alle Segmente",
+        "random": "[Zufällig]"
+    }
+}

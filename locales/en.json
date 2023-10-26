@@ -1,0 +1,21 @@
+{
+    "deviceSetupWarning": "This device is not configured, yet! Please go to advanced settings of the device to finish the setup.",
+    "deviceFwOutdatedWarning": "A newer firmware version is available for this device! Please update it.",
+    "allLEDsLabel": "ALL",
+    "deviceLooksOffline": "Your device is not reachable!",
+    "settings": {
+        "title": "Settings",
+        "labelDeviceName": "Device Name",
+        "labelDeviceId": "Device ID",
+        "labelBtnConfig": "Config",
+        "labelLedNumber": "#",
+        "labelLedName": "LED Name",
+        "labelBtnSaveLeds": "Save",
+        "ledSettingsInfo": "These settings enable you to label your individual leds (not supported for WLED). However, this is only for better recognition in your flows. Also bear in mind that the name shown in your flowcards is not refreshed automatically when you rename the leds. This is a technical limitation of how flowcards arguements work."
+    },
+    "wled": {
+        "unsupFw": "Unsupported firmware! Please update your controller!",
+        "allSeg": "All Segments",
+        "random": "[Random]"
+    }
+}

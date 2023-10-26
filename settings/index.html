@@ -1,0 +1,123 @@
+<!doctype html>
+<html>
+
+<head>
+  <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+</head>
+
+<body>
+  <h1 id="pageTitleContent" data-i18n="settings.title"></h1>
+  <fieldset>
+    <legend data-i18n="settings.ledSettingsInfo"></legend>
+    <div class="field row; table-layout:auto;">
+      <table style="font-size:small;border-spacing: 8px 2px;white-space:nowrap;" id="devTable">
+        <tr>
+          <th data-i18n="settings.labelDeviceName"></th>
+          <th data-i18n="settings.labelDeviceId"></th>
+          <th> </th>
+        </tr>
+      </table>
+      <table style="font-size:small;border-spacing: 8px 2px;white-space:nowrap;" id="ledTable">
+        <tr>
+          <th data-i18n="settings.labelLedNumber"></th>
+          <th data-i18n="settings.labelLedName"></th>
+        </tr>
+      </table>
+    </div>
+  </fieldset>
+  <script type="text/javascript">
+    var currentLedData = null;
+    function clearTable(table) {
+      var rows = table.rows;
+      var i = rows.length;
+      while (--i) {
+        table.deleteRow(i);
+      }
+    }
+    function showDeviceIndex() {
+      Homey.api('POST', '/getDevices', {}, function (err, data) {
+        if (err) {
+          return Homey.alert(err, 'error');
+        } else {
+          var devicesTable = document.getElementById('devTable');
+          devicesTable.style = "display: block;"
+          for (const [key, dataObj] of Object.entries(data)) {
+            var newRow = devicesTable.insertRow(1);
+            var cellName = newRow.insertCell(0);
+            cellName.innerHTML = dataObj.name;
+            var cellDevId = newRow.insertCell(1);
+            cellDevId.innerHTML = dataObj.id;
+            var cellCmdEdit = newRow.insertCell(2);
+            var btn = document.createElement("BUTTON");
+            cellCmdEdit.appendChild(btn);
+            btn.innerHTML = Homey.__('settings.labelBtnConfig');
+            btn.onclick = function () {
+              Homey.api('POST', '/getLedConfig', { "deviceID": dataObj.id }, function (err, data) {
+                if (err) {
+                  return Homey.alert(err, 'error');
+                } else {
+                  devicesTable.style = "display: none;"
+                  currentLedData = data;
+                  var ledsTable = document.getElementById('ledTable');
+                  clearTable(ledsTable);
+                  var idx = 0;
+                  for (idx = 0; idx < data.ledCount; idx++) {
+                    var newLedRow = ledsTable.insertRow(idx + 1);
+                    var ledCellName = newLedRow.insertCell(0);
+                    ledCellName.innerHTML = `# ${idx + 1}`;
+                    var ledLabelCell = newLedRow.insertCell(1);
+                    var labelInput = document.createElement("INPUT");
+                    labelInput.type = "text";
+                    labelInput.value = "text";
+                    labelInput.id = `LED${idx}`;
+                    labelInput.maxLength = 30;
+                    if (data.deviceConfig.hasOwnProperty(`${idx}`)) {
+                      labelInput.value = data.deviceConfig[`${idx}`].label;
+                    } else {
+                      labelInput.value = "";
+                    }
+                    ledLabelCell.appendChild(labelInput);
+                  }
+                  var cmdRowSave = ledsTable.insertRow(idx + 1);
+                  cmdRowSave.insertCell(0);
+                  var cmdCellSave = cmdRowSave.insertCell(1);
+                  var btnSaveLeds = document.createElement("BUTTON");
+                  cmdCellSave.appendChild(btnSaveLeds);
+                  btnSaveLeds.innerHTML = Homey.__('settings.labelBtnSaveLeds');
+                  btnSaveLeds.onclick = function () {
+                    var newLedData = {};
+                    for (var idxS = 0; idxS < data.ledCount; idxS++) {
+                      var ledLabelElement = document.getElementById(`LED${idxS}`);
+                      var tmp = ledLabelElement.value;
+                      tmp = tmp.trim();
+                      if (tmp != "") newLedData[`${idxS}`] = { "label": tmp };
+                    }
+                    Homey.api('POST', '/saveLedConfig', { "deviceID": dataObj.id, "newLedData": newLedData }, function (err, data) {
+                      if (err) {
+                        return Homey.alert(err, 'error');
+                      } else {
+                        ledsTable.style = "display: none;"
+                        devicesTable.style = "display: block;"
+                      }
+                    });
+                  }
+                  ledsTable.style = "display: block;"
+                }
+              });
+            };
+            devicesTable.appendChild(newRow);
+          }
+        }
+      });
+    }
+    function onHomeyReady(Homey) {
+      var ledsTable = document.getElementById('ledTable');
+      ledsTable.style = "display: none;"
+      showDeviceIndex();
+      // Tell Homey we're ready to be displayed
+      Homey.ready();
+    }
+  </script>
+</body>
+
+</html>
